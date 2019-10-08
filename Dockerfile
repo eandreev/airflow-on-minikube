@@ -1,5 +1,5 @@
-#FROM puckel/docker-airflow:1.10.4
-FROM puckel/docker-airflow:1.10.0-5
+FROM puckel/docker-airflow:1.10.4
+#FROM puckel/docker-airflow:1.10.0-5
 
 USER root
 RUN pip install kubernetes

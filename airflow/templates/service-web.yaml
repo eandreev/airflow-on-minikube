@@ -1,19 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "airflow.fullname" . }}
+  name: {{ include "airflow.fullname" . }}-web
   labels:
     app.kubernetes.io/name: {{ include "airflow.name" . }}
     helm.sh/chart: {{ include "airflow.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: web
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.webUIService.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.webUIService.port }}
       targetPort: http
       protocol: TCP
       name: http
   selector:
     app.kubernetes.io/name: {{ include "airflow.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: web

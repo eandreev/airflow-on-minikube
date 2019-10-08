@@ -2,16 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 airflow:
   image:
-    #repository: puckel/docker-airflow
-    #tag: 1.10.4
-    ##tag: 1.10.0-5
-
-    repository: k8s-airflow
-    tag: latest
+    repository: puckel/docker-airflow
+    tag: 1.10.4
 
     pullPolicy: IfNotPresent
 
@@ -39,32 +33,23 @@ airflow:
   ## fernetKey: ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD
   fernetKey: "orpZlMLT6W-UJ1XHjhdwrz7DqfG5eLhLLogY2lKlf6U="
 
-redis:
-  password: "redispass"
-
-  # run Redis in a single-node mode
-  cluster:
-    enabled: false
 
 nameOverride: ""
 fullnameOverride: ""
 
-service:
-  type: ClusterIP
-  port: 80
 
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+# Web UI settings
+webUIService:
+  type: ClusterIP
+
+  # Port exposed by the k8s web ui
+  port: 8080
+
+
+# Worker settings
+workers:
+  replicaCount: 2
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -83,6 +68,18 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+##
+## Configuration values for the redis dependency.
+## ref: https://github.com/kubernetes/charts/blob/master/stable/redis/README.md
+redis:
+  password: redispass
+  port: 6379
+
+  cluster:
+    # run Redis in a single-node mode
+    enabled: false
 
 
 ##

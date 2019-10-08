@@ -68,7 +68,7 @@ if [ "$AIRFLOW__CORE__EXECUTOR" = "CeleryExecutor" ]; then
   wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
 fi
 
-echo " =====> [[" "$1" "]]"
+echo " =====> [[" "$@" "]]"
 
 case "$1" in
   webserver)

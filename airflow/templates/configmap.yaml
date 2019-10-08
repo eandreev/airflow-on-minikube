@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "airflow.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "airflow.name" . }}
+    helm.sh/chart: {{ include "airflow.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  LOAD_EX: "y"
+  EXECUTOR: Celery
+  FERNET_KEY: {{ .Values.airflow.fernetKey }}
+  POSTGRES_USER: {{ .Values.postgresql.postgresqlUsername }}
+  POSTGRES_PASSWORD: {{ .Values.postgresql.postgresqlPassword }}
+  POSTGRES_DB: {{ .Values.postgresql.postgresqlDatabase }}
+  POSTGRES_HOST: {{ template "airflow.postgresql.fullname" . }}
+  POSTGRES_PORT: {{ .Values.postgresql.servicePort }}
+  REDIS_HOST: {{ template "airflow.redis.fullname" .}}
+  REDIS_PORT: {{ .Values.redis.port }}
+  REDIS_PASSWORD: {{ .Values.redis.password }}
