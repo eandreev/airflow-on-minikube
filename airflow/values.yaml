@@ -9,7 +9,7 @@ airflow:
 
     pullPolicy: IfNotPresent
 
-  dagsPath: /mnt/dags
+  dagsPath: /usr/local/airflow/dags
   logsPath: /usr/local/airflow/logs
 
   ##

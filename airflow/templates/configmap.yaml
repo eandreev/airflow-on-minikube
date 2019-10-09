@@ -15,7 +15,7 @@ data:
   POSTGRES_PASSWORD: {{ .Values.postgresql.postgresqlPassword }}
   POSTGRES_DB: {{ .Values.postgresql.postgresqlDatabase }}
   POSTGRES_HOST: {{ template "airflow.postgresql.fullname" . }}
-  POSTGRES_PORT: {{ .Values.postgresql.servicePort }}
+  POSTGRES_PORT: "{{ .Values.postgresql.servicePort }}"
   REDIS_HOST: {{ template "airflow.redis.fullname" .}}
-  REDIS_PORT: {{ .Values.redis.port }}
+  REDIS_PORT: "{{ .Values.redis.port }}"
   REDIS_PASSWORD: {{ .Values.redis.password }}
