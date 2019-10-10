@@ -1,0 +1,80 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "airflow.fullname" . }}-flower
+  labels:
+    app.kubernetes.io/name: {{ include "airflow.name" . }}
+    helm.sh/chart: {{ include "airflow.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: flower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "airflow.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: flower
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "airflow.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: flower
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.airflow.image.repository }}:{{ .Values.airflow.image.tag }}"
+          imagePullPolicy: {{ .Values.airflow.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ template "airflow.fullname" . }}
+          #env:
+          #  - name: POSTGRES_USER
+          #    valueFrom:
+          #      secretKeyRef:
+          #        name: {{ template "airflow.fullname" . }}
+          #        key: postgresUsername
+          args:
+            - "bash"
+            - "-c"
+            - >
+              airflow flower
+          volumeMounts:
+            - name: dags
+              mountPath: {{ .Values.airflow.dagsPath }}
+            - name: logs
+              mountPath: {{ .Values.airflow.logsPath }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.flowerUIService.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: dags
+          persistentVolumeClaim:
+            claimName: dags
+        - name: logs
+          persistentVolumeClaim:
+            claimName: logs

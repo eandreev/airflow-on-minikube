@@ -45,6 +45,12 @@ webUIService:
   # Port exposed by the k8s web ui
   port: 8080
 
+flowerUIService:
+  type: ClusterIP
+
+  # Port exposed by the flower web ui
+  port: 5555
+
 
 # Worker settings
 workers:

@@ -1,6 +1,6 @@
 # A Helm Chart for Running Airflow Using CeleryExecutor on Minikube
 
-This chart can be used to run Airflow on Kubernetes in Minukube.
+This Helm chart can be used to run Airflow on Kubernetes in Minukube.
 
 It is loosely based on the [GoDataDriven Airflow chart](https://github.com/godatadriven/airflow-helm) and [docker-compose-CeleryExecutor.yml](https://github.com/puckel/docker-airflow/blob/master/docker-compose-CeleryExecutor.yml) from the [puckel/docker-airflow](https://github.com/puckel/docker-airflow) Docker image github repo.
 
@@ -40,8 +40,13 @@ Install the chart:
 $ helm install --namespace "airflow" --name "airflow" airflow
 ```
 
-Proxy the web UI to http://localhost:8080/
+Proxy Airflow's web UI to http://localhost:8080/
 
 ```bash
 $ kubectl port-forward svc/airflow-web 8080:8080 --namespace=airflow
+```
+Proxy Flower's web UI to http://localhost:5555/
+
+```bash
+kubectl port-forward svc/airflow-flower 5555:5555 --namespace=airflow
 ```
